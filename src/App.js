@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Listing from './listing';
 import Viewer from './viewer';
-import {BrowserRouter as Router, Route, Link} from "react-router-dom";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 
 
 class App extends Component {
