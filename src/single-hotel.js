@@ -1,17 +1,26 @@
 import React, {Component} from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardHeader from '@material-ui/core/CardHeader';
-import IconStarRate from '@material-ui/icons/StarRate';
-import {Link} from "react-router-dom";
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  CardHeader,
+  CardActions,
+  Button,
+  IconButton,
+  Grid,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
+import {
+  StarRate, Edit, Delete
+} from '@material-ui/icons';
+// import IconStarRate from '@material-ui/icons/StarRate';
+// import IconEdit from '@material-ui/icons/Edit';
+// import IconDelete from '@material-ui/icons/Delete';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Grid from '@material-ui/core/Grid';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import {Link} from "react-router-dom";
 
 class SingleHotel extends Component {
   state = {
@@ -21,7 +30,7 @@ class SingleHotel extends Component {
   renderStars(n) {
     let arr = [];
     for (let i = 0; i < n; i++) {
-      arr.push(<IconStarRate key={i}/>);
+      arr.push(<StarRate key={i}/>);
     }
     return arr;
   }
@@ -66,13 +75,23 @@ class SingleHotel extends Component {
                 open={Boolean(anchorEl)}
                 onClose={this.handleMenuClose}
               >
-                <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-                <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
-                <MenuItem onClick={this.handleMenuClose}>Logout</MenuItem>
+                <MenuItem onClick={this.handleMenuClose}>
+                  <ListItemIcon>
+                    <Delete color="error"/>
+                  </ListItemIcon>
+                  <ListItemText primary="Delete" secondary="Boo!"/>
+                </MenuItem>
+                <MenuItem onClick={this.handleMenuClose}>
+                  <ListItemIcon>
+                    <Edit color="primary"/>
+                  </ListItemIcon>
+                  <ListItemText primary="Edit" secondary="You no like?"/>
+                </MenuItem>
               </Menu>
             </div>
           }
         />
+
         <Grid container>
           <Grid item xs={6}>
             {row.image && row.image.handle ?

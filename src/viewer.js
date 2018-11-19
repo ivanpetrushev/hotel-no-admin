@@ -5,7 +5,13 @@ import Paper from '@material-ui/core/Paper';
 import SingleHotel from "./single-hotel";
 
 class Viewer extends Component {
+  componentDidMount(){
+    this.props.setTitle('Hotel / View');
+  }
+
   render() {
+    console.log('viewer props render', this.props)
+
     const client = new ApolloClient({
       uri: 'https://api-euwest.graphcms.com/v1/cjo8axbur5jsp01gl5slsksbm/master',
       request: operation => {

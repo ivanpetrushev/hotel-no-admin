@@ -25,6 +25,10 @@ class Listing extends Component {
     return arr;
   }
 
+  componentDidMount(){
+    this.props.setTitle('Hotels');
+  }
+
   render() {
     const cardStyle = {
       width: 300,
