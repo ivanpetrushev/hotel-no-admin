@@ -25,7 +25,7 @@ class App extends Component {
             <AppBar position="static" color="default">
               <Toolbar>
                 <Typography variant="h6" color="inherit">
-                  Page Title: {this.state.currentPage}
+                  {this.state.currentPage}
                 </Typography>
                 <Button color="primary" component={Link} to="/">Hotels</Button>
                 <Button color="primary" component={Link} to="/cities">Cities</Button>
@@ -33,6 +33,7 @@ class App extends Component {
             </AppBar>
 
             <Route exact path="/" render={(props) => <Listing {...props} setTitle={this.setPageTitle}/>}/>
+            <Route path="/listing/:cityId/:cityName" render={(props) => <Listing {...props} setTitle={this.setPageTitle}/>}/>
             <Route path="/view/:id" render={(props) => <Viewer {...props} setTitle={this.setPageTitle}/>}/>
             <Route path="/cities" render={(props) => <Cities {...props} setTitle={this.setPageTitle}/>}/>
           </div>

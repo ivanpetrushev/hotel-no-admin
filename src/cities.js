@@ -11,11 +11,13 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
+import SearchIcon from '@material-ui/icons/Search';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
+import {BrowserRouter as Router, Link, Route, Redirect} from "react-router-dom";
 
 
 const actionsStyles = theme => ({
@@ -47,7 +49,7 @@ class TablePaginationActions extends React.Component {
   };
 
   render() {
-    const { classes, count, page, rowsPerPage, theme } = this.props;
+    const {classes, count, page, rowsPerPage, theme} = this.props;
 
     return (
       <div className={classes.root}>
@@ -56,28 +58,28 @@ class TablePaginationActions extends React.Component {
           disabled={page === 0}
           aria-label="First Page"
         >
-          <FirstPageIcon />
+          <FirstPageIcon/>
         </IconButton>
         <IconButton
           onClick={this.handleBackButtonClick}
           disabled={page === 0}
           aria-label="Previous Page"
         >
-          <KeyboardArrowLeft />
+          <KeyboardArrowLeft/>
         </IconButton>
         <IconButton
           onClick={this.handleNextButtonClick}
           disabled={page >= Math.ceil(count / rowsPerPage) - 1}
           aria-label="Next Page"
         >
-          <KeyboardArrowRight />
+          <KeyboardArrowRight/>
         </IconButton>
         <IconButton
           onClick={this.handleLastPageButtonClick}
           disabled={page >= Math.ceil(count / rowsPerPage) - 1}
           aria-label="Last Page"
         >
-          <LastPageIcon />
+          <LastPageIcon/>
         </IconButton>
       </div>
     );
@@ -93,7 +95,7 @@ TablePaginationActions.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(
+const TablePaginationActionsWrapped = withStyles(actionsStyles, {withTheme: true})(
   TablePaginationActions,
 );
 
@@ -113,22 +115,32 @@ const styles = theme => ({
 class Cities extends Component {
   state = {
     page: 0,
-    rowsPerPage: 5
+    rowsPerPage: 5,
+    redirectToCity: null
   }
 
   handleChangePage = (event, page) => {
-    this.setState({ page });
+    this.setState({page});
   };
 
   handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
+    this.setState({rowsPerPage: event.target.value});
   };
+
+  handleSearchClick = (city) => {
+    console.log('a sq', city)
+    this.setState({redirectToCity: city});
+  }
 
   componentDidMount() {
     this.props.setTitle('Cities');
   }
 
   render() {
+    if (this.state.redirectToCity) {
+      return <Redirect to={"/listing/" + this.state.redirectToCity.id + '/' + this.state.redirectToCity.name}/>
+    }
+
     const client = new ApolloClient({
       uri: 'https://api-euwest.graphcms.com/v1/cjo8axbur5jsp01gl5slsksbm/master',
       request: operation => {
@@ -159,7 +171,7 @@ class Cities extends Component {
         }
     `;
 
-    const { rowsPerPage, page } = this.state;
+    const {rowsPerPage, page} = this.state;
 
     return (
       <Paper style={{maxWidth: 1000, margin: 'auto'}}>
@@ -168,8 +180,6 @@ class Cities extends Component {
             if (loading) return "Loading...";
             if (error) return "Error: " + error.message;
 
-            console.log('graphCMS responded', data)
-
             return (
               <Table>
                 <TableHead>
@@ -177,7 +187,7 @@ class Cities extends Component {
                     <TableCell>Name</TableCell>
                     <TableCell numeric>Population</TableCell>
                     <TableCell numeric>Num. Hotels</TableCell>
-                    <TableCell>Actions</TableCell>
+                    <TableCell>Filter</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -186,7 +196,14 @@ class Cities extends Component {
                       <TableCell>{row.node.name}</TableCell>
                       <TableCell numeric>{row.node.population}</TableCell>
                       <TableCell numeric>Unknown</TableCell>
-                      <TableCell>btns</TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => this.handleSearchClick(row.node)}
+                          aria-label="Search"
+                        >
+                          <SearchIcon/>
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   )}
                 </TableBody>
@@ -208,7 +225,6 @@ class Cities extends Component {
             );
           }}
         </Query>
-
       </Paper>
     );
   }
