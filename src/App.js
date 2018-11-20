@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Listing from './listing';
 import Viewer from './viewer';
+import Cities from './cities';
 import {BrowserRouter as Router, Link, Route} from "react-router-dom";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -33,6 +34,7 @@ class App extends Component {
 
             <Route exact path="/" render={(props) => <Listing {...props} setTitle={this.setPageTitle}/>}/>
             <Route path="/view/:id" render={(props) => <Viewer {...props} setTitle={this.setPageTitle}/>}/>
+            <Route path="/cities" render={(props) => <Cities {...props} setTitle={this.setPageTitle}/>}/>
           </div>
         </Router>
       </div>
