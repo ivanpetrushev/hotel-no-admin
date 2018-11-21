@@ -20,6 +20,11 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import {Redirect} from "react-router-dom";
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CloseIcon from '@material-ui/icons/Close';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
 
 const actionsStyles = theme => ({
   root: {
@@ -121,7 +126,8 @@ class Cities extends Component {
     getQueryVariables: {
       first: 5, //this.state.rowsPerPage,
       skip: 0, //this.state.page * this.state.rowsPerPage
-    }
+    },
+    snackbarAddedOpen: false
   }
 
   handleChangePage = (event, page) => {
@@ -129,7 +135,7 @@ class Cities extends Component {
       page: page,
       getQueryVariables: {
         first: this.state.rowsPerPage,
-        skip: this.state.page * this.state.rowsPerPage
+        skip: page * this.state.rowsPerPage
       }
     });
   };
@@ -138,8 +144,8 @@ class Cities extends Component {
     this.setState({
       rowsPerPage: event.target.value,
       getQueryVariables: {
-        first: this.state.rowsPerPage,
-        skip: this.state.page * this.state.rowsPerPage
+        first: event.target.value,
+        skip: this.state.page * event.target.value
       }
     });
   };
@@ -153,7 +159,6 @@ class Cities extends Component {
       name: event.target.elements.name.value,
       population: event.target.elements.population.value,
     };
-    console.log('variables', variables)
     callback({
       variables: variables,
       refetchQueries: [
@@ -163,6 +168,17 @@ class Cities extends Component {
         }
       ]
     });
+    this.setState({snackbarAddedOpen: true});
+    document.getElementById("form-add-city").reset();
+
+  }
+
+  handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({snackbarAddedOpen: false});
   }
 
   GET_CITIES = gql`
@@ -231,7 +247,7 @@ class Cities extends Component {
                     <TableCell colSpan={3}>
                       <Mutation mutation={this.CREATE_CITY}>
                         {(createCity, {data}) => (
-                          <form onSubmit={(e) => {
+                          <form id="form-add-city" onSubmit={(e) => {
                             e.preventDefault();
                             this.handleSubmit(e, createCity)
                           }}>
@@ -279,6 +295,18 @@ class Cities extends Component {
             );
           }}
         </Query>
+
+        <Snackbar open={this.state.snackbarAddedOpen}
+                  autoHideDuration={3000}
+                  onClose={this.handleSnackbarClose}
+        >
+          <SnackbarContent style={{backgroundColor: '#43a047'}} message={
+            <span style={{display: 'flex', alignItems: 'center'}}>
+            <CheckCircleIcon/>
+              Item added!
+            </span>
+          }/>
+        </Snackbar>
       </Paper>
     );
   }
