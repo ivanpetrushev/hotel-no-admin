@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import ApolloClient, {gql} from 'apollo-boost';
+import {gql} from 'apollo-boost';
 import {Query} from "react-apollo";
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
@@ -27,9 +27,9 @@ class Listing extends Component {
 
   componentDidMount() {
     if (this.props.match.params.cityName) {
-      this.props.setTitle('Hotels from: ' + this.props.match.params.cityName);
+      this.props.setTitle('Hotels from: ' + this.props.match.params.cityName, 'hotel_listing');
     } else {
-      this.props.setTitle('Hotels');
+      this.props.setTitle('Hotels', 'hotel_listing');
     }
   }
 
@@ -41,17 +41,6 @@ class Listing extends Component {
       display: 'inline-block',
       verticalAlign: 'top'
     };
-
-    const client = new ApolloClient({
-      uri: 'https://api-euwest.graphcms.com/v1/cjo8axbur5jsp01gl5slsksbm/master',
-      request: operation => {
-        operation.setContext({
-          headers: {
-            authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJ0b2tlbklkIjoiZGJkZGU5ODUtNjNhNi00NzA0LWI4ZDUtNmUyNGVmMmRiYTc2In0.zGQRTQhkH8QOeEyZJGqrLWBtpMlZg3UYr_XG_xRyhJM`,
-          },
-        });
-      },
-    });
 
     const GET_HOTELS = gql`
         query hotels($id:ID){
@@ -70,8 +59,8 @@ class Listing extends Component {
     const MAP_TOKEN = 'pk.eyJ1IjoiaXZhbmF0b3JhIiwiYSI6ImNpazd1dmFpbjAwMDF3MW04MjFlMXJ6czMifQ.jeVzm6JIjhsdc5MRhUsd8w';
 
     return (
-      <Paper style={{maxWidth: 1000, margin: 'auto'}}>
-        <Query query={GET_HOTELS} client={client} variables={{id: this.props.match.params.cityId}}>
+      <Paper style={{maxWidth: 1000, margin: 'auto', marginTop: 10}}>
+        <Query query={GET_HOTELS}  variables={{id: this.props.match.params.cityId}}>
           {({loading, error, data}) => {
             if (loading) return "Loading...";
             if (error) return `Error! ${error.message}`;

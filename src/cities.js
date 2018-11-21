@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
-import ApolloClient, {gql} from 'apollo-boost';
-import {Query} from "react-apollo";
+import {gql} from 'apollo-boost';
+import {Query, Mutation} from "react-apollo";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableFooter from '@material-ui/core/TableFooter';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Input from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,8 +19,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import {BrowserRouter as Router, Link, Route, Redirect} from "react-router-dom";
-
+import {Redirect} from "react-router-dom";
 
 const actionsStyles = theme => ({
   root: {
@@ -49,7 +50,7 @@ class TablePaginationActions extends React.Component {
   };
 
   render() {
-    const {classes, count, page, rowsPerPage, theme} = this.props;
+    const {classes, count, page, rowsPerPage} = this.props;
 
     return (
       <div className={classes.root}>
@@ -116,24 +117,86 @@ class Cities extends Component {
   state = {
     page: 0,
     rowsPerPage: 5,
-    redirectToCity: null
+    redirectToCity: null,
+    getQueryVariables: {
+      first: 5, //this.state.rowsPerPage,
+      skip: 0, //this.state.page * this.state.rowsPerPage
+    }
   }
 
   handleChangePage = (event, page) => {
-    this.setState({page});
+    this.setState({
+      page: page,
+      getQueryVariables: {
+        first: this.state.rowsPerPage,
+        skip: this.state.page * this.state.rowsPerPage
+      }
+    });
   };
 
   handleChangeRowsPerPage = event => {
-    this.setState({rowsPerPage: event.target.value});
+    this.setState({
+      rowsPerPage: event.target.value,
+      getQueryVariables: {
+        first: this.state.rowsPerPage,
+        skip: this.state.page * this.state.rowsPerPage
+      }
+    });
   };
 
   handleSearchClick = (city) => {
-    console.log('a sq', city)
     this.setState({redirectToCity: city});
   }
 
+  handleSubmit = (event, callback) => {
+    let variables = {
+      name: event.target.elements.name.value,
+      population: event.target.elements.population.value,
+    };
+    console.log('variables', variables)
+    callback({
+      variables: variables,
+      refetchQueries: [
+        {
+          query: this.GET_CITIES,
+          variables: this.state.getQueryVariables
+        }
+      ]
+    });
+  }
+
+  GET_CITIES = gql`
+    query cities($first:Int, $skip: Int){
+        citiesConnection(orderBy:name_ASC, first: $first, skip: $skip) {
+            edges {
+                node {
+                    id
+                    name
+                    population
+                }
+            }
+        }
+        allCitiesWithCount: citiesConnection {
+            aggregate {
+                count
+            }
+        }
+    }
+`;
+
+  CREATE_CITY = gql`
+    mutation createCity($name:String!, $population:Int){
+        createCity(data: {name: $name, population: $population}) {
+            id
+            name
+            population
+        }
+    }
+
+`;
+
   componentDidMount() {
-    this.props.setTitle('Cities');
+    this.props.setTitle('Cities', 'city_listing');
   }
 
   render() {
@@ -141,41 +204,11 @@ class Cities extends Component {
       return <Redirect to={"/listing/" + this.state.redirectToCity.id + '/' + this.state.redirectToCity.name}/>
     }
 
-    const client = new ApolloClient({
-      uri: 'https://api-euwest.graphcms.com/v1/cjo8axbur5jsp01gl5slsksbm/master',
-      request: operation => {
-        operation.setContext({
-          headers: {
-            authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJ0b2tlbklkIjoiZGJkZGU5ODUtNjNhNi00NzA0LWI4ZDUtNmUyNGVmMmRiYTc2In0.zGQRTQhkH8QOeEyZJGqrLWBtpMlZg3UYr_XG_xRyhJM`,
-          },
-        });
-      },
-    });
-
-    const GET_CITIES = gql`
-        query cities($first:Int, $skip: Int){
-            citiesConnection(orderBy:name_ASC, first: $first, skip: $skip) {
-                edges {
-                    node {
-                        id
-                        name
-                        population
-                    }
-                }
-            }
-            allCitiesWithCount: citiesConnection {
-                aggregate {
-                    count
-                }
-            }
-        }
-    `;
-
     const {rowsPerPage, page} = this.state;
 
     return (
-      <Paper style={{maxWidth: 1000, margin: 'auto'}}>
-        <Query query={GET_CITIES} client={client} variables={{first: rowsPerPage, skip: page * rowsPerPage}}>
+      <Paper style={{maxWidth: 1000, margin: 'auto', marginTop: 10}}>
+        <Query query={this.GET_CITIES} variables={this.state.getQueryVariables}>
           {({loading, error, data}) => {
             if (loading) return "Loading...";
             if (error) return "Error: " + error.message;
@@ -191,6 +224,27 @@ class Cities extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                  <TableRow style={{background: 'cornsilk'}}>
+                    <TableCell>
+                      <b>New city</b>
+                    </TableCell>
+                    <TableCell colSpan={3}>
+                      <Mutation mutation={this.CREATE_CITY}>
+                        {(createCity, {data}) => (
+                          <form onSubmit={(e) => {
+                            e.preventDefault();
+                            this.handleSubmit(e, createCity)
+                          }}>
+                            <Input placeholder="Name" name="name" style={{marginRight: 10}} required/>
+                            <Input placeholder="Population" name="population" style={{marginRight: 10}} type="number"
+                                   required/>
+                            <Button color="primary" variant="contained" type="submit">Save</Button>
+                          </form>
+                        )}
+                      </Mutation>
+                    </TableCell>
+                  </TableRow>
+
                   {data.citiesConnection.edges.map(row =>
                     <TableRow key={row.node.id}>
                       <TableCell>{row.node.name}</TableCell>
@@ -235,4 +289,3 @@ Cities.propTypes = {
 };
 
 export default withStyles(styles)(Cities);
-// export default Cities;
