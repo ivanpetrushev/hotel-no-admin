@@ -11,14 +11,21 @@ class Viewer extends Component {
 
   render() {
     const GET_SINGLE_HOTEL = gql`
-        query hotels($id: ID){
-            hotels(where:{id:$id}){
-                id, title, address, numberOfBeds, lat, lon, rating, dateOpen, dateClose,
+        query allHotels($id:ID){
+            allHotels(filter:{id:$id}) {
+                id
+                title
+                address
+                numberOfBeds
+                lat
+                lon
+                rating
+                dateOpen
+                dateClose
                 city {
-                    id, name, population
-                },
-                image {
-                    id, fileName, width, height, handle
+                    id
+                    name
+                    population
                 }
             }
         }
@@ -31,7 +38,7 @@ class Viewer extends Component {
             if (loading) return "Loading...";
             if (error) return `Error! ${error.message}`;
 
-            return <SingleHotel row={data.hotels[0]}/>
+            return <SingleHotel row={data.allHotels[0]}/>
           }}
         </Query>
       </Paper>

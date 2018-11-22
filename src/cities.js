@@ -157,7 +157,7 @@ class Cities extends Component {
   handleSubmit = (event, callback) => {
     let variables = {
       name: event.target.elements.name.value,
-      population: event.target.elements.population.value,
+      population: parseInt(event.target.elements.population.value),
     };
     callback({
       variables: variables,
@@ -182,32 +182,30 @@ class Cities extends Component {
   }
 
   GET_CITIES = gql`
-    query cities($first:Int, $skip: Int){
-        citiesConnection(orderBy:name_ASC, first: $first, skip: $skip) {
-            edges {
-                node {
-                    id
-                    name
-                    population
-                }
-            }
-        }
-        allCitiesWithCount: citiesConnection {
-            aggregate {
-                count
-            }
-        }
-    }
+      query cities($first: Int, $skip: Int) {
+          allCities(orderBy: name_ASC, first: $first, skip: $skip) {
+              id
+              name
+              population
+              _hotelsMeta {
+                  count
+              }
+          }
+          _allCitiesMeta {
+              count
+          }
+      }
 `;
 
   CREATE_CITY = gql`
-    mutation createCity($name:String!, $population:Int){
-        createCity(data: {name: $name, population: $population}) {
-            id
-            name
-            population
-        }
-    }
+      mutation createCity($name:String!, $population:Int){
+          createCity(
+              name:$name
+              population:$population
+          ) {
+              id, name, population
+          }
+      }
 
 `;
 
@@ -261,14 +259,14 @@ class Cities extends Component {
                     </TableCell>
                   </TableRow>
 
-                  {data.citiesConnection.edges.map(row =>
-                    <TableRow key={row.node.id}>
-                      <TableCell>{row.node.name}</TableCell>
-                      <TableCell numeric>{row.node.population}</TableCell>
-                      <TableCell numeric>Unknown</TableCell>
+                  {data.allCities.map(row =>
+                    <TableRow key={row.id}>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell numeric>{row.population}</TableCell>
+                      <TableCell numeric>{row._hotelsMeta.count}</TableCell>
                       <TableCell>
                         <IconButton
-                          onClick={() => this.handleSearchClick(row.node)}
+                          onClick={() => this.handleSearchClick(row)}
                           aria-label="Search"
                         >
                           <SearchIcon/>
@@ -282,7 +280,7 @@ class Cities extends Component {
                     <TablePagination
                       rowsPerPageOptions={[3, 5, 10]}
                       colSpan={4}
-                      count={data.allCitiesWithCount.aggregate.count}
+                      count={data._allCitiesMeta.count}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onChangePage={this.handleChangePage}

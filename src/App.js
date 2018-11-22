@@ -11,16 +11,17 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from "react-apollo";
 
 const client = new ApolloClient({
-  uri: 'https://api-euwest.graphcms.com/v1/cjo8axbur5jsp01gl5slsksbm/master',
-  request: operation => {
-    operation.setContext({
-      headers: {
-        // authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJ0b2tlbklkIjoiZGJkZGU5ODUtNjNhNi00NzA0LWI4ZDUtNmUyNGVmMmRiYTc2In0.zGQRTQhkH8QOeEyZJGqrLWBtpMlZg3UYr_XG_xRyhJM`,
-        // authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJ0b2tlbklkIjoiZGUwZjQ5NzktMGVkYS00ZDkyLWE0NmMtMmI4YWYyNDkzYWJjIn0.cWtmPXVNwgy5mLadJD-R6_8rw7OIOwrK46NKLxoEZEw`,
-        authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJ0b2tlbklkIjoiMGRlYzY5ZGEtODIyZi00ZjA0LTgyNzQtNWVmZGNkZTkzMGFkIn0.tnoZCetJKVesMvvBO_wDQ1w1aYNRC-xwaCVv0LIdw1o`,
-      },
-    });
-  },
+  // uri: 'https://api-euwest.graphcms.com/v1/cjo8axbur5jsp01gl5slsksbm/master', // GraphCMS
+  uri: 'https://api.graph.cool/simple/v1/cjo9qjp1p32hh01281qa1kwea\n', // GraphCool
+  // request: operation => {
+  //   operation.setContext({
+  //     headers: {
+  //       // authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJ0b2tlbklkIjoiZGJkZGU5ODUtNjNhNi00NzA0LWI4ZDUtNmUyNGVmMmRiYTc2In0.zGQRTQhkH8QOeEyZJGqrLWBtpMlZg3UYr_XG_xRyhJM`,
+  //       // authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJ0b2tlbklkIjoiZGUwZjQ5NzktMGVkYS00ZDkyLWE0NmMtMmI4YWYyNDkzYWJjIn0.cWtmPXVNwgy5mLadJD-R6_8rw7OIOwrK46NKLxoEZEw`,
+  //       authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJ0b2tlbklkIjoiMGRlYzY5ZGEtODIyZi00ZjA0LTgyNzQtNWVmZGNkZTkzMGFkIn0.tnoZCetJKVesMvvBO_wDQ1w1aYNRC-xwaCVv0LIdw1o`,
+  //     },
+  //   });
+  // },
 });
 
 class App extends Component {

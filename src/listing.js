@@ -43,17 +43,25 @@ class Listing extends Component {
     };
 
     const GET_HOTELS = gql`
-        query hotels($id:ID){
-            hotels(where:{city:{id:$id}}){
-                id, title, address, numberOfBeds, lat, lon, rating, dateOpen, dateClose,
+        query allHotels($cityId:ID){
+            allHotels(filter:{city:{id:$cityId}}) {
+                id
+                title
+                address
+                numberOfBeds
+                lat
+                lon
+                rating
+                dateOpen
+                dateClose
                 city {
-                    id, name, population
-                },
-                image {
-                    id, fileName, width, height, handle
+                    id
+                    name
+                    population
                 }
             }
         }
+
     `;
 
     const MAP_TOKEN = 'pk.eyJ1IjoiaXZhbmF0b3JhIiwiYSI6ImNpazd1dmFpbjAwMDF3MW04MjFlMXJ6czMifQ.jeVzm6JIjhsdc5MRhUsd8w';
@@ -67,7 +75,7 @@ class Listing extends Component {
 
             return (
               <div>
-                {data.hotels.map(row =>
+                {data.allHotels.map(row =>
                   <Card style={cardStyle} key={row.id}>
                     <CardHeader title={row.title} subheader={row.city.name + ' city / pop: ' + row.city.population}/>
                     {row.image && row.image.handle ?
