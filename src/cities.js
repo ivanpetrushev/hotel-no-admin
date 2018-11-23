@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {gql} from 'apollo-boost';
-import {Query, Mutation} from "react-apollo";
+import {Query, Mutation, Subscription} from "react-apollo";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableFooter from '@material-ui/core/TableFooter';
@@ -22,9 +22,8 @@ import {withStyles} from '@material-ui/core/styles';
 import {Redirect} from "react-router-dom";
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-import CloseIcon from '@material-ui/icons/Close';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-
+import SimpleDialog from './simple-dialog';
 
 const actionsStyles = theme => ({
   root: {
@@ -208,6 +207,18 @@ class Cities extends Component {
       }
 
 `;
+  SUBSCRIPTION_NEW_CITY = gql`
+      subscription newCity {
+          City(filter: {mutation_in: [CREATED]}) {
+              mutation
+              node {
+                  id
+                  name
+              }
+              updatedFields
+          }
+      }
+  `;
 
   componentDidMount() {
     this.props.setTitle('Cities', 'city_listing');
@@ -222,6 +233,20 @@ class Cities extends Component {
 
     return (
       <Paper style={{maxWidth: 1000, margin: 'auto', marginTop: 10}}>
+        <Subscription subscription={this.SUBSCRIPTION_NEW_CITY}>
+          {({ data, loading}) => {
+            console.log('subscription', data, loading);
+            if (typeof data === 'undefined' || typeof data.City === 'undefined') {
+              return null;
+            } else {
+              return (
+                <SimpleDialog msg={`New city: ${data.City.node.name}`}/>
+              );
+            }
+          }}
+        </Subscription>
+
+
         <Query query={this.GET_CITIES} variables={this.state.getQueryVariables}>
           {({loading, error, data}) => {
             if (loading) return "Loading...";
