@@ -233,18 +233,18 @@ class Cities extends Component {
 
     return (
       <Paper style={{maxWidth: 1000, margin: 'auto', marginTop: 10}}>
-        <Subscription subscription={this.SUBSCRIPTION_NEW_CITY}>
-          {({ data, loading}) => {
-            console.log('subscription', data, loading);
-            if (typeof data === 'undefined' || typeof data.City === 'undefined') {
-              return null;
-            } else {
-              return (
-                <SimpleDialog msg={`New city: ${data.City.node.name}`}/>
-              );
-            }
-          }}
-        </Subscription>
+        {/*<Subscription subscription={this.SUBSCRIPTION_NEW_CITY}>*/}
+          {/*{({ data, loading}) => {*/}
+            {/*console.log('subscription', data, loading);*/}
+            {/*if (typeof data === 'undefined' || typeof data.City === 'undefined') {*/}
+              {/*return null;*/}
+            {/*} else {*/}
+              {/*return (*/}
+                {/*<SimpleDialog msg={`New city: ${data.City.node.name}`}/>*/}
+              {/*);*/}
+            {/*}*/}
+          {/*}}*/}
+        {/*</Subscription>*/}
 
 
         <Query query={this.GET_CITIES} variables={this.state.getQueryVariables}>
