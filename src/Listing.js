@@ -81,7 +81,7 @@ class Listing extends Component {
                     {row.image && row.image.handle ?
                       <CardMedia component="img" height="140"
                                  image={'https://media.graphcms.com/' + row.image.handle}/> :
-                      <CardMedia component="img" height="140" image="https://via.placeholder.com/300x140.png?text=?"/>
+                      <CardMedia component="img" height="140" image="http://placekitten.com/300/140"/>
                     }
                     {row.lat && row.lon ?
                       <CardMedia component="img" height="140"

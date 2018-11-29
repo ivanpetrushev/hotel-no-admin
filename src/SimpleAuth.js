@@ -21,7 +21,7 @@ export default class Auth {
   }
 
   isAuthenticated = () => {
-    return localStorage.getItem('user');
+    return Boolean(localStorage.getItem('user'));
   }
 
   getAccessToken = () => {
