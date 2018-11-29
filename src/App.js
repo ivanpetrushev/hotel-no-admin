@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import Listing from './listing';
+import Listing from './Listing';
 import Viewer from './viewer';
-import Cities from './cities';
-import CitiesMT from './cities-material-table';
+import Cities from './Cities';
+import CitiesMT from './CitiesMaterialTable';
 import {Router, Link, Route} from "react-router-dom";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -20,7 +20,7 @@ import Login from './Login';
 import Logout from './Logout';
 import Auth from './Auth';
 import AuthCallback from './AuthCallback';
-import history from './history';
+import history from './History';
 
 const httpUri = 'https://api.graph.cool/simple/v1/cjo9qjp1p32hh01281qa1kwea';
 const wsUri = 'wss://subscriptions.graph.cool/v1/cjo9qjp1p32hh01281qa1kwea';

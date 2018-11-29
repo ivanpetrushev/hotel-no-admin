@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {gql} from 'apollo-boost';
 import {Query} from "react-apollo";
 import Paper from '@material-ui/core/Paper';
-import SingleHotel from "./single-hotel";
+import SingleHotel from "./SingleHotel";
 
 class Viewer extends Component {
   componentDidMount(){

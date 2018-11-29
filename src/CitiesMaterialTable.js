@@ -19,8 +19,8 @@ import {Redirect} from "react-router-dom";
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import SimpleDialog from './simple-dialog';
-import TablePaginationActionsWrapped from './table-pagination';
+import SimpleDialog from './SimpleDialog';
+import TablePaginationActionsWrapped from './TablePagination';
 
 
 const styles = theme => ({
@@ -36,7 +36,7 @@ const styles = theme => ({
   },
 });
 
-class Cities extends Component {
+class CitiesMT extends Component {
   state = {
     page: 0,
     rowsPerPage: 5,
@@ -113,7 +113,7 @@ class Cities extends Component {
               count
           }
       }
-`;
+  `;
 
   CREATE_CITY = gql`
       mutation createCity($name:String!, $population:Int){
@@ -125,7 +125,7 @@ class Cities extends Component {
           }
       }
 
-`;
+  `;
   SUBSCRIPTION_NEW_CITY = gql`
       subscription newCity {
           City(filter: {mutation_in: [CREATED]}) {
@@ -140,7 +140,7 @@ class Cities extends Component {
   `;
 
   componentDidMount() {
-    this.props.setTitle('Cities', 'city_listing');
+    this.props.setTitle('Cities MT', 'city_listing_mt');
   }
 
   render() {
@@ -152,20 +152,6 @@ class Cities extends Component {
 
     return (
       <Paper style={{maxWidth: 1000, margin: 'auto', marginTop: 10}}>
-        {/*<Subscription subscription={this.SUBSCRIPTION_NEW_CITY}>*/}
-          {/*{({ data, loading}) => {*/}
-            {/*console.log('subscription', data, loading);*/}
-            {/*if (typeof data === 'undefined' || typeof data.City === 'undefined') {*/}
-              {/*return null;*/}
-            {/*} else {*/}
-              {/*return (*/}
-                {/*<SimpleDialog msg={`New city: ${data.City.node.name}`}/>*/}
-              {/*);*/}
-            {/*}*/}
-          {/*}}*/}
-        {/*</Subscription>*/}
-
-
         <Query query={this.GET_CITIES} variables={this.state.getQueryVariables}>
           {({loading, error, data}) => {
             if (loading) return "Loading...";
@@ -254,8 +240,5 @@ class Cities extends Component {
   }
 }
 
-Cities.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
-export default withStyles(styles)(Cities);
+export default withStyles(styles)(CitiesMT);
