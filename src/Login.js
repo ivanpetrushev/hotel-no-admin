@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import {Redirect, Link} from 'react-router-dom';
-import Auth from './Auth';
+import Auth from './SimpleAuth';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -9,6 +9,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import {gql} from 'apollo-boost';
 import {Query, Mutation, Subscription} from "react-apollo";
 import AlertDialog from './AlertDialog';
+import history from './History';
 
 class Login extends React.Component {
   state = {
@@ -17,11 +18,13 @@ class Login extends React.Component {
     alertContent: ''
   }
 
+  auth = new Auth();
+
   SIGNIN_USER = gql`
       mutation signinUser($email: String!, $password: String!) {
           signinUser(email: {email: $email, password: $password}) {
               user {
-                  id
+                  id, email
               }
               token
           }
@@ -38,6 +41,8 @@ class Login extends React.Component {
     }).then(response => {
       console.log('response', response)
       // @TODO
+      this.auth.setSession(response.data);
+      history.replace('/');
     }).catch(e => {
       this.setState({
         alertOpen: true,

@@ -1,5 +1,5 @@
 import React from 'react';
-import Auth from './Auth';
+import Auth from './SimpleAuth';
 
 class Logout extends React.Component {
 
@@ -10,6 +10,7 @@ class Logout extends React.Component {
   }
 
   render () {
+    // formal return as auth.logout() should redirect to '/'
     return (
       <div></div>
     );

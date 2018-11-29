@@ -18,7 +18,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { setContext } from 'apollo-link-context';
 import Login from './Login';
 import Logout from './Logout';
-import Auth from './Auth';
+import Auth from './SimpleAuth';
 import AuthCallback from './AuthCallback';
 import history from './History';
 
@@ -85,10 +85,11 @@ class App extends Component {
   render() {
     let buttons = [];
     if (this.auth.isAuthenticated()) {
+      let user = this.auth.getUser();
       buttons.push(<Button key="1" color="primary" variant={this.state.currentPageSlug === 'hotel_listing' ? 'outlined' : 'text'} component={Link} to="/">Hotels</Button>)
       buttons.push(<Button key="2" color="primary" variant={this.state.currentPageSlug === 'city_listing' ? 'outlined' : 'text'} component={Link} to="/cities">Cities</Button>)
       buttons.push(<Button key="3" color="primary" variant={this.state.currentPageSlug === 'city_listing_mt' ? 'outlined' : 'text'} component={Link} to="/cities_mt">Cities MT</Button>)
-      buttons.push(<Button key="4" color="secondary" variant='contained' component={Link} to="/logout">Logout</Button>)
+      buttons.push(<Button key="4" color="secondary" variant='contained' component={Link} to="/logout">Logout {user.email}</Button>)
     } else {
       buttons.push(<Button key="1" color="secondary" variant='contained' component={Link} to="/login">Login</Button>)
     }
