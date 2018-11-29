@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {withStyles} from "@material-ui/core/styles/index";
 import FirstPageIcon from '@material-ui/icons/FirstPage';
-import SearchIcon from '@material-ui/icons/Search';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';

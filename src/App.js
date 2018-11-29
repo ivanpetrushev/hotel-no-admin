@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Listing from './listing';
 import Viewer from './viewer';
 import Cities from './cities';
+import CitiesMT from './cities-material-table';
 import {Router, Link, Route} from "react-router-dom";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -86,7 +87,8 @@ class App extends Component {
     if (this.auth.isAuthenticated()) {
       buttons.push(<Button key="1" color="primary" variant={this.state.currentPageSlug === 'hotel_listing' ? 'outlined' : 'text'} component={Link} to="/">Hotels</Button>)
       buttons.push(<Button key="2" color="primary" variant={this.state.currentPageSlug === 'city_listing' ? 'outlined' : 'text'} component={Link} to="/cities">Cities</Button>)
-      buttons.push(<Button key="3" color="secondary" variant='contained' component={Link} to="/logout">Logout</Button>)
+      buttons.push(<Button key="3" color="primary" variant={this.state.currentPageSlug === 'city_listing_mt' ? 'outlined' : 'text'} component={Link} to="/cities_mt">Cities MT</Button>)
+      buttons.push(<Button key="4" color="secondary" variant='contained' component={Link} to="/logout">Logout</Button>)
     } else {
       buttons.push(<Button key="1" color="secondary" variant='contained' component={Link} to="/login">Login</Button>)
     }
@@ -112,6 +114,7 @@ class App extends Component {
               <Route path="/listing/:cityId/:cityName" render={(props) => <Listing {...props} setTitle={this.setPageTitle}/>}/>
               <Route path="/view/:id" render={(props) => <Viewer {...props} setTitle={this.setPageTitle}/>}/>
               <Route path="/cities" render={(props) => <Cities {...props} setTitle={this.setPageTitle}/>}/>
+              <Route path="/cities_mt" render={(props) => <CitiesMT {...props} setTitle={this.setPageTitle}/>}/>
             </div>
             <Route path="/callback" component={AuthCallback} />
             <Route path="/logout" component={Logout} />
