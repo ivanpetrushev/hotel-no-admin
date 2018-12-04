@@ -53,7 +53,7 @@ class Cities extends Component {
       page: page,
       getQueryVariables: {
         first: this.state.rowsPerPage,
-        skip: page * this.state.rowsPerPage
+        skip: page * this.state.rowsPerPage,
       }
     });
   };
@@ -63,7 +63,7 @@ class Cities extends Component {
       rowsPerPage: event.target.value,
       getQueryVariables: {
         first: event.target.value,
-        skip: this.state.page * event.target.value
+        skip: this.state.page * event.target.value,
       }
     });
   };
